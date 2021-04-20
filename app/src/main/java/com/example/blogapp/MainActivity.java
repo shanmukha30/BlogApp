@@ -33,12 +33,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    FavouritesRecyclerViewAdapter FavouritesAdapter;
-    static ArrayList<String> FavouritesList = new ArrayList<>();
-
-
     @BindView(R.id.toolbar) Toolbar toolbar;
     ArrayList<Map<String, String>> searchList = new ArrayList<>();
+    static ArrayList<String> favouritesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +43,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         RecyclerView FavouritesRecyclerView = findViewById(R.id.FavouritesRecyclerView);
 
-        FavouritesAdapter = new FavouritesRecyclerViewAdapter(this,FavouritesList);
+        FavouritesRecyclerViewAdapter favouritesAdapter = new FavouritesRecyclerViewAdapter(this, favouritesList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         FavouritesRecyclerView.setLayoutManager(layoutManager);
-        FavouritesRecyclerView.setAdapter(FavouritesAdapter);
-
-        //web view
+        FavouritesRecyclerView.setAdapter(favouritesAdapter);
 
         ButterKnife.bind(this);
 

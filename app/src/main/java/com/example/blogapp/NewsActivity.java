@@ -10,8 +10,7 @@ import java.util.ArrayList;
 
 public class NewsActivity extends AppCompatActivity {
 
-    NewsRecyclerViewAdapter NewsAdapter;
-    static ArrayList<String> NewsList = new ArrayList<>();
+    static ArrayList<String> newsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +18,9 @@ public class NewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news);
         RecyclerView NewsRecyclerView = findViewById(R.id.NewsRecyclerView);
 
-        NewsAdapter = new NewsRecyclerViewAdapter(this,NewsList);
+        NewsRecyclerViewAdapter newsAdapter = new NewsRecyclerViewAdapter(this, newsList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         NewsRecyclerView.setLayoutManager(layoutManager);
-        NewsRecyclerView.setAdapter(NewsAdapter);
+        NewsRecyclerView.setAdapter(newsAdapter);
     }
 }
