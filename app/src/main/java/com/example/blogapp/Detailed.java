@@ -25,7 +25,7 @@ public class Detailed extends AppCompatActivity {
         setContentView(R.layout.activity_detailed);
         NewsTitle = findViewById(R.id.NewsTitle);
         Source = findViewById(R.id.Source);
-        thumbnail_id = findViewById(R.id.thumbnail_id)
+        thumbnail_id = findViewById(R.id.thumbnail_id);
 
         Description = findViewById(R.id.Description);
         webView = findViewById(R.id.webView);

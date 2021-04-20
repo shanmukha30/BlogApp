@@ -39,9 +39,10 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.NewsTitle.setText(arrayList.get(position));
         holder.Source.setText(arrayList.get(position));
         String url = mData.getUrl();
+
         //holder.img_recipe_thumbNail.setImageResource(mData.get(position).getThumbNail());
 
-        String ima
+        String urlToImage = mData.getUrlToImage();
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
