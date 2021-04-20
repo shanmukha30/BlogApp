@@ -1,26 +1,68 @@
 package com.example.blogapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+    ArrayList<Map<String, String>> searchList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        API myApi = retrofit.create(API.class);
+        Call<ArrayList<JSONplaceHolder>> call = myApi.getResult("b09bf3b0daaa4ea88fa79218bff2c973", "tesla");
+        call.enqueue(new Callback<ArrayList<JSONplaceHolder>>() {
+            @Override
+            public void onResponse(Call<ArrayList<JSONplaceHolder>> call, Response<ArrayList<JSONplaceHolder>> response) {
+                ArrayList<JSONplaceHolder> searchResults = response.body();
+                for (int i = 0; i < searchResults.size(); i++) {
+                    Map<String, String> entry = new HashMap<>();
+                    entry.put("title", searchResults.get(i).getTitle());
+                    entry.put("source", searchResults.get(i).getSource().getName());
+                    entry.put("imgurl", searchResults.get(i).getUrlToImage());
+                    entry.put("url", searchResults.get(i).getUrl());
+                    searchList.add(entry);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<JSONplaceHolder>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("Error", t.getMessage());
+            }
+        });
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
