@@ -4,8 +4,7 @@ import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class JSONplaceHolder implements Serializable
-{
+public class JSONPlaceHolder implements Serializable {
 
     @SerializedName("source")
     @Expose
@@ -99,6 +98,15 @@ public class JSONplaceHolder implements Serializable
 
 }
 class Source {
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+    @SerializedName("id")
+    @Expose
+    private String id;
+
     public String getName() {
         return name;
     }
@@ -114,13 +122,5 @@ class Source {
     public void setId(String id) {
         this.id = id;
     }
-
-    @SerializedName("name")
-    @Expose
-    private String name;
-
-    @SerializedName("id")
-    @Expose
-    private String id;
 }
 

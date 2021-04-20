@@ -36,34 +36,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        API myApi = retrofit.create(API.class);
-        Call<ArrayList<JSONplaceHolder>> call = myApi.getResult("b09bf3b0daaa4ea88fa79218bff2c973", "tesla");
-        call.enqueue(new Callback<ArrayList<JSONplaceHolder>>() {
-            @Override
-            public void onResponse(Call<ArrayList<JSONplaceHolder>> call, Response<ArrayList<JSONplaceHolder>> response) {
-                ArrayList<JSONplaceHolder> searchResults = response.body();
-                for (int i = 0; i < searchResults.size(); i++) {
-                    Map<String, String> entry = new HashMap<>();
-                    entry.put("title", searchResults.get(i).getTitle());
-                    entry.put("source", searchResults.get(i).getSource().getName());
-                    entry.put("imgurl", searchResults.get(i).getUrlToImage());
-                    entry.put("url", searchResults.get(i).getUrl());
-                    searchList.add(entry);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<JSONplaceHolder>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("Error", t.getMessage());
-            }
-        });
-
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser == null) {
@@ -80,6 +52,34 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        API myApi = retrofit.create(API.class);
+        Call<ArrayList<JSONPlaceHolder>> call = myApi.getResult("b09bf3b0daaa4ea88fa79218bff2c973", "tesla");
+        call.enqueue(new Callback<ArrayList<JSONPlaceHolder>>() {
+            @Override
+            public void onResponse(Call<ArrayList<JSONPlaceHolder>> call, Response<ArrayList<JSONPlaceHolder>> response) {
+                ArrayList<JSONPlaceHolder> searchResults = response.body();
+                for (int i = 0; i < searchResults.size(); i++) {
+                    Map<String, String> entry = new HashMap<>();
+                    entry.put("title", searchResults.get(i).getTitle());
+                    entry.put("source", searchResults.get(i).getSource().getName());
+                    entry.put("imgurl", searchResults.get(i).getUrlToImage());
+                    entry.put("url", searchResults.get(i).getUrl());
+                    searchList.add(entry);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<JSONPlaceHolder>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("Error", t.getMessage());
+            }
         });
     }
 }
