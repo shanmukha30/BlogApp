@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -43,6 +44,10 @@ public class NewsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         goButton.setOnClickListener(v -> {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (NewsActivity.this.getCurrentFocus() != null){
+                inputMethodManager.hideSoftInputFromWindow(NewsActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(API.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -52,17 +57,18 @@ public class NewsActivity extends AppCompatActivity {
             API myApi = retrofit.create(API.class);
             try {
                 String urlEncoder = URLEncoder.encode(searchEditText.getText().toString(), "UTF-8");
-                Call<JSONPlaceHolder> call = myApi.getResult(urlEncoder, "b09bf3b0daaa4ea88fa79218bff2c973");
+                Call<JSONPlaceHolder> call = myApi.getResult("15fdc83a80810857840c4d450ee6b187", urlEncoder);
                 call.enqueue(new Callback<JSONPlaceHolder>() {
                     @Override
                     public void onResponse(@NonNull Call<JSONPlaceHolder> call, @NonNull Response<JSONPlaceHolder> response) {
-                        if (response.body().getArticles() != null && response.body().getArticles().size() > 0) {
-                            ArrayList<Article> searchResults = response.body().getArticles();
+                        if (response.body().getData() != null && response.body().getData().size() > 0) {
+                            ArrayList<Datum> searchResults = response.body().getData();
                             for (int i = 0; i < searchResults.size(); i++) {
                                 Map<String, String> entry = new HashMap<>();
                                 entry.put("title", searchResults.get(i).getTitle());
-                                entry.put("source", searchResults.get(i).getSource().getName());
-                                entry.put("imgurl", searchResults.get(i).getUrlToImage());
+                                entry.put("name", searchResults.get(i).getSource());
+                                entry.put("description", searchResults.get(i).getDescription());
+                                entry.put("imgurl", "x");
                                 entry.put("url", searchResults.get(i).getUrl());
                                 searchList.add(entry);
                             }

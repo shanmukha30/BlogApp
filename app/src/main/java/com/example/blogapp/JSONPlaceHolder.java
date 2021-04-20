@@ -7,51 +7,38 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class JSONPlaceHolder implements Serializable {
-    @SerializedName("status")
+
+    @SerializedName("pagination")
     @Expose
-    private String status;
-    @SerializedName("totalResults")
+    private Pagination pagination;
+    @SerializedName("data")
     @Expose
-    private Integer totalResults;
-    @SerializedName("articles")
-    @Expose
-    private ArrayList<Article> articles = new ArrayList<>();
-    private final static long serialVersionUID = 2491656370174138504L;
+    private ArrayList<Datum> data = null;
+    private final static long serialVersionUID = -6320538010548387380L;
 
-    public String getStatus() {
-        return status;
+    public Pagination getPagination() {
+        return pagination;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
     }
 
-    public Integer getTotalResults() {
-        return totalResults;
+    public ArrayList<Datum> getData() {
+        return data;
     }
 
-    public void setTotalResults(Integer totalResults) {
-        this.totalResults = totalResults;
-    }
-
-    public ArrayList<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(ArrayList<Article> articles) {
-        this.articles = articles;
+    public void setData(ArrayList<Datum> data) {
+        this.data = data;
     }
 
 }
 
-class Article implements Serializable {
+class Datum implements Serializable {
 
-    @SerializedName("source")
-    @Expose
-    private Source source;
     @SerializedName("author")
     @Expose
-    private String author;
+    private Object author;
     @SerializedName("title")
     @Expose
     private String title;
@@ -61,31 +48,31 @@ class Article implements Serializable {
     @SerializedName("url")
     @Expose
     private String url;
-
-    @SerializedName("urlToImage")
+    @SerializedName("source")
     @Expose
-    private String urlToImage;
-    @SerializedName("publishedAt")
+    private String source;
+    @SerializedName("image")
+    @Expose
+    private Object image;
+    @SerializedName("category")
+    @Expose
+    private String category;
+    @SerializedName("language")
+    @Expose
+    private String language;
+    @SerializedName("country")
+    @Expose
+    private String country;
+    @SerializedName("published_at")
     @Expose
     private String publishedAt;
-    @SerializedName("content")
-    @Expose
-    private String content;
-    private final static long serialVersionUID = -4594692951061690616L;
+    private final static long serialVersionUID = -228320712847334865L;
 
-    public Source getSource() {
-        return source;
-    }
-
-    public void setSource(Source source) {
-        this.source = source;
-    }
-
-    public String getAuthor() {
+    public Object getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Object author) {
         this.author = author;
     }
 
@@ -113,12 +100,44 @@ class Article implements Serializable {
         this.url = url;
     }
 
-    public String getUrlToImage() {
-        return urlToImage;
+    public String getSource() {
+        return source;
     }
 
-    public void setUrlToImage(String urlToImage) {
-        this.urlToImage = urlToImage;
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Object getImage() {
+        return image;
+    }
+
+    public void setImage(Object image) {
+        this.image = image;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getPublishedAt() {
@@ -129,39 +148,55 @@ class Article implements Serializable {
         this.publishedAt = publishedAt;
     }
 
-    public String getContent() {
-        return content;
+}
+
+class Pagination implements Serializable
+{
+
+    @SerializedName("limit")
+    @Expose
+    private Integer limit;
+    @SerializedName("offset")
+    @Expose
+    private Integer offset;
+    @SerializedName("count")
+    @Expose
+    private Integer count;
+    @SerializedName("total")
+    @Expose
+    private Integer total;
+    private final static long serialVersionUID = 7125486220187798220L;
+
+    public Integer getLimit() {
+        return limit;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 
 }
-class Source {
-
-    @SerializedName("name")
-    @Expose
-    private String name;
-
-    @SerializedName("id")
-    @Expose
-    private String id;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-}
-

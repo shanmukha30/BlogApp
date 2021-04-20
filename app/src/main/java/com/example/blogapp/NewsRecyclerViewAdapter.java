@@ -51,7 +51,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.newsTitle.setText(arrayList.get(position).get("title"));
         holder.newsSource.setText(arrayList.get(position).get("name"));
         holder.newsDesc.setText(arrayList.get(position).get("description"));
-        Picasso.with(mContext).load(arrayList.get(position).get("imgurl")).into(holder.thumbnail);
+        //Picasso.with(mContext).load(arrayList.get(position).get("imgurl")).into(holder.thumbnail);
         holder.cardView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, DetailsActivity.class);
             intent.putExtra("url", arrayList.get(position).get("url"));
@@ -62,8 +62,9 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             public boolean onLongClick(View v) {
                 Map<String, String> entry = new HashMap<>();
                 entry.put("title", arrayList.get(position).get("title"));
-                entry.put("source", arrayList.get(position).get("name"));
-                entry.put("imgurl", arrayList.get(position).get("imgurl"));
+                entry.put("name", arrayList.get(position).get("name"));
+                entry.put("description", arrayList.get(position).get("description"));
+                entry.put("imgurl", "x");
                 entry.put("url", arrayList.get(position).get("url"));
                 MainActivity.favouritesList.add(entry);
                 MainActivity.favouritesAdapter.notifyDataSetChanged();
