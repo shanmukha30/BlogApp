@@ -7,14 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -49,6 +56,33 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             Intent intent = new Intent(mContext, DetailsActivity.class);
             intent.putExtra("url", arrayList.get(position).get("url"));
             mContext.startActivity(intent);
+        });
+        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Map<String, String> entry = new HashMap<>();
+                entry.put("title", arrayList.get(position).get("title"));
+                entry.put("source", arrayList.get(position).get("name"));
+                entry.put("imgurl", arrayList.get(position).get("imgurl"));
+                entry.put("url", arrayList.get(position).get("url"));
+                MainActivity.favouritesList.add(entry);
+                MainActivity.favouritesAdapter.notifyDataSetChanged();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection(FirebaseAuth.getInstance().getCurrentUser().toString()).document("x").set(entry).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(mContext, "Could save", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return true;
+            }
         });
     }
 

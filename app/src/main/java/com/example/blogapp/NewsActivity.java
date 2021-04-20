@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +41,7 @@ public class NewsActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         newsRecyclerView.setLayoutManager(layoutManager);
         newsRecyclerView.setAdapter(newsAdapter);
+        ButterKnife.bind(this);
 
         goButton.setOnClickListener(v -> {
             Retrofit retrofit = new Retrofit.Builder()
@@ -51,11 +53,12 @@ public class NewsActivity extends AppCompatActivity {
             API myApi = retrofit.create(API.class);
             try {
                 String urlEncoder = URLEncoder.encode(searchEditText.getText().toString(), "UTF-8");
-                Call<ArrayList<JSONPlaceHolder>> call = myApi.getResult("b09bf3b0daaa4ea88fa79218bff2c973", urlEncoder);
-                call.enqueue(new Callback<ArrayList<JSONPlaceHolder>>() {
+                Call<JSONPlaceHolder> call = myApi.getWeather("ee1e6fc97eae412a8f3125336211202", urlEncoder);
+                call.enqueue(new Callback<JSONPlaceHolder>() {
                     @Override
-                    public void onResponse(@NonNull Call<ArrayList<JSONPlaceHolder>> call, @NonNull Response<ArrayList<JSONPlaceHolder>> response) {
-                        ArrayList<JSONPlaceHolder> searchResults = response.body();
+                    public void onResponse(@NonNull Call<JSONPlaceHolder> call, @NonNull Response<JSONPlaceHolder> response) {
+                        Log.i("infoxx", response.body().getCurrent().getCondition().getText());
+                        /*ArrayList<Article> searchResults = response.body().getArticles();
                         for (int i = 0; i < searchResults.size(); i++) {
                             Map<String, String> entry = new HashMap<>();
                             entry.put("title", searchResults.get(i).getTitle());
@@ -64,11 +67,11 @@ public class NewsActivity extends AppCompatActivity {
                             entry.put("url", searchResults.get(i).getUrl());
                             searchList.add(entry);
                         }
-                        newsAdapter.notifyDataSetChanged();
+                        newsAdapter.notifyDataSetChanged();*/
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<ArrayList<JSONPlaceHolder>> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<JSONPlaceHolder> call, @NonNull Throwable t) {
                         Toast.makeText(NewsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.e("Error", t.getMessage());
                     }

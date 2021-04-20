@@ -1,6 +1,7 @@
 package com.example.blogapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.Map;
+
+import butterknife.BindView;
 
 public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<FavouritesRecyclerViewAdapter.MyHolder>{
     private Context mContext;
@@ -36,20 +41,14 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
 
-        //holder.NewsTitle.setText(arrayList.get(position));
-
-        //holder.img_recipe_thumbNail.setImageResource(mData.get(position).getThumbNail());
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Intent intent = new Intent(mContext,RecipeActivity.class);
-
-                intent.putExtra("Name",mData.get(position).getRecipeName());
-                intent.putExtra("Ingredients",mData.get(position).getRecipeIngredients());
-                intent.putExtra("MethodTitle",mData.get(position).getRecipeMethodTitle());
-                intent.putExtra("Recipe",mData.get(position).getRecipe());*/
-            }
+        holder.newsTitle.setText(arrayList.get(position).get("title"));
+        holder.newsSource.setText(arrayList.get(position).get("name"));
+        holder.newsDesc.setText(arrayList.get(position).get("description"));
+        Picasso.with(mContext).load(arrayList.get(position).get("imgurl")).into(holder.thumbnail);
+        holder.cardView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, DetailsActivity.class);
+            intent.putExtra("url", arrayList.get(position).get("url"));
+            mContext.startActivity(intent);
         });
     }
 
@@ -60,18 +59,14 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
 
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        TextView NewsTitle,Source,Description;
-        CardView cardView;
-        ImageView thumbNail;
+        @BindView(R.id.newsTitle) TextView newsTitle;
+        @BindView(R.id.thumbnail_id) ImageView thumbnail;
+        @BindView(R.id.cardView) CardView cardView;
+        @BindView(R.id.newsSource) TextView newsSource;
+        @BindView(R.id.newsDesc) TextView newsDesc;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-
-            NewsTitle = itemView.findViewById(R.id.newsTitle);
-            thumbNail = itemView.findViewById(R.id.thumbnail_id);
-            cardView = itemView.findViewById(R.id.cardView);
-            Source = itemView.findViewById(R.id.newsSource);
-            Description = itemView.findViewById(R.id.newsDesc);
         }
     }
 }
