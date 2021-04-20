@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView favouritesRecyclerView = findViewById(R.id.favouritesRecyclerView);
 
         favouritesAdapter = new FavouritesRecyclerViewAdapter(this, favouritesList);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         favouritesRecyclerView.setLayoutManager(layoutManager);
         favouritesRecyclerView.setAdapter(favouritesAdapter);
 
@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Couldn't retrieve data", Toast.LENGTH_SHORT).show());
+        favouritesAdapter.notifyDataSetChanged();
 
         setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(item -> {
