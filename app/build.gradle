@@ -13,6 +13,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +38,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:18.0.3'
     implementation 'com.jakewharton:butterknife:10.2.3'
     implementation 'com.google.firebase:firebase-auth:20.0.4'
+    implementation 'com.airbnb.android:lottie:3.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

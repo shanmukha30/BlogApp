@@ -18,11 +18,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/main_menu"
         app:title="News Today" />
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-    </WebView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/FavouritesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:padding="15dp" />
 
 </RelativeLayout>

@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,7 +32,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends AppCompatActivity {
-    private WebView webView;
+
+    FavouritesRecyclerViewAdapter FavouritesAdapter;
+    static ArrayList<String> FavouritesList = new ArrayList<>();
+
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     ArrayList<Map<String, String>> searchList = new ArrayList<>();
@@ -39,12 +44,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        RecyclerView FavouritesRecyclerView = findViewById(R.id.FavouritesRecyclerView);
+
+        FavouritesAdapter = new FavouritesRecyclerViewAdapter(this,FavouritesList);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        FavouritesRecyclerView.setLayoutManager(layoutManager);
+        FavouritesRecyclerView.setAdapter(FavouritesAdapter);
+
         //web view
-        webView = (WebView) findViewById(R.id.webView);
-        webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl("https://www.nytimes.com/");
-        WebSettings webSettings=webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+
         ButterKnife.bind(this);
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -61,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 return true;
+            }
+            else if(item.getItemId() == R.id.searchButton){
+                Intent intent = new Intent(this,NewsActivity.class);
+                startActivity(intent);
             }
             return false;
         });
@@ -92,25 +104,5 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Error", t.getMessage());
             }
         });
-    }
-    public class webClient extends WebViewClient{
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon){
-            super.onPageStarted(view,url,favicon);
-        }
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view,String url){
-            view.loadUrl(url);
-            return true;
-        }
-    }
-    @Override
-    public void onBackPressed(){
-        if(webView.canGoBack()) {
-            webView.goBack();
-        }
-        else{
-            super.onBackPressed();
-        }
     }
 }
