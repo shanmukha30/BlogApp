@@ -21,6 +21,9 @@ public class JSONPlaceHolder implements Serializable {
     @SerializedName("url")
     @Expose
     private String url;
+
+
+
     @SerializedName("urlToImage")
     @Expose
     private String urlToImage;
