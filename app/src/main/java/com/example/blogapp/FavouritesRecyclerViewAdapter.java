@@ -12,12 +12,13 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<FavouritesRecyclerViewAdapter.MyHolder>{
     private Context mContext;
-    private ArrayList<String> arrayList;
+    private ArrayList<Map<String, String>> arrayList;
 
-    public FavouritesRecyclerViewAdapter(Context mContext, ArrayList<String> arrayList){
+    public FavouritesRecyclerViewAdapter(Context mContext, ArrayList<Map<String, String>> arrayList){
         this.mContext = mContext;
         this.arrayList = arrayList;
     }
@@ -35,7 +36,7 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
 
-        holder.NewsTitle.setText(arrayList.get(position));
+        //holder.NewsTitle.setText(arrayList.get(position));
 
         //holder.img_recipe_thumbNail.setImageResource(mData.get(position).getThumbNail());
 
@@ -66,11 +67,11 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
         public MyHolder(@NonNull View itemView) {
             super(itemView);
 
-            NewsTitle = itemView.findViewById(R.id.NewsTitle);
+            NewsTitle = itemView.findViewById(R.id.newsTitle);
             thumbNail = itemView.findViewById(R.id.thumbnail_id);
             cardView = itemView.findViewById(R.id.cardView);
-            Source = itemView.findViewById(R.id.Source);
-            Description = itemView.findViewById(R.id.Description);
+            Source = itemView.findViewById(R.id.newsSource);
+            Description = itemView.findViewById(R.id.newsDesc);
         }
     }
 }

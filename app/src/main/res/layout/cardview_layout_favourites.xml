@@ -20,12 +20,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="4dp">
 
         <ImageView
             android:id="@+id/thumbnail_id"
-            android:layout_width="155dp"
-            android:layout_height="160dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:background="#03A9F4"
             android:scaleType="centerCrop" />
 
@@ -35,7 +36,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/NewsTitle"
+                android:id="@+id/newsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/fauna_one"
@@ -48,7 +49,7 @@
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/Source"
+                android:id="@+id/newsSource"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/fauna_one"
@@ -60,7 +61,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/Description"
+                android:id="@+id/newsDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/fauna_one"
@@ -74,21 +75,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/VectorDrawableCompat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:contentDescription="TODO"
-            app:srcCompat="@drawable/ic_baseline_bookmark_24" />
     </LinearLayout>
 
 

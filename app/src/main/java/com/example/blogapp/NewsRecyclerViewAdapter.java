@@ -12,13 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
+import java.util.Map;
+
+import butterknife.BindView;
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.MyHolder>{
     private Context mContext;
-    private ArrayList<String> arrayList;
+    private ArrayList<Map<String, String>> arrayList;
 
-    public NewsRecyclerViewAdapter(Context mContext, ArrayList<String> arrayList){
+    public NewsRecyclerViewAdapter(Context mContext, ArrayList<Map<String, String>> arrayList){
         this.mContext = mContext;
         this.arrayList = arrayList;
     }
@@ -36,30 +41,14 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
 
-        holder.NewsTitle.setText(arrayList.get(position));
-        holder.Source.setText(arrayList.get(position));
-        String url = mData.getUrl();
-        //holder.img_recipe_thumbNail.setImageResource(mData.get(position).getThumbNail());
-
-        String ima
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext,Detailed.class);
-
-                intent.putExtra("Name",mData.get(position).getRecipeName());
-                intent.putExtra("Ingredients",mData.get(position).getRecipeIngredients());
-                intent.putExtra("MethodTitle",mData.get(position).getRecipeMethodTitle());
-                intent.putExtra("Recipe",mData.get(position).getRecipe());
-                intent.putExtra("url",mData.getUrl());
-                intent.putExtra("title",mData.getTitle);
-                intent.putExtra("source",mData.getSource);
-                intent.putExtra("description",mData.getDescription);
-
-
-
-                mContext.startActivity(intent);
-            }
+        holder.newsTitle.setText(arrayList.get(position).get("title"));
+        holder.newsSource.setText(arrayList.get(position).get("name"));
+        holder.newsDesc.setText(arrayList.get(position).get("description"));
+        Picasso.with(mContext).load(arrayList.get(position).get("imgurl")).into(holder.thumbnail);
+        holder.cardView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, DetailsActivity.class);
+            intent.putExtra("url", arrayList.get(position).get("url"));
+            mContext.startActivity(intent);
         });
     }
 
@@ -70,19 +59,14 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        public ImageView img_recipe_thumbNail;
-        TextView NewsTitle,Source,Description;
-        CardView cardView;
-        ImageView thumbNail;
+        @BindView(R.id.newsTitle) TextView newsTitle;
+        @BindView(R.id.thumbnail_id) ImageView thumbnail;
+        @BindView(R.id.cardView) CardView cardView;
+        @BindView(R.id.newsSource) TextView newsSource;
+        @BindView(R.id.newsDesc) TextView newsDesc;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-
-            NewsTitle = itemView.findViewById(R.id.NewsTitle);
-            thumbNail = itemView.findViewById(R.id.thumbnail_id);
-            cardView = itemView.findViewById(R.id.cardView);
-            Source = itemView.findViewById(R.id.Source);
-            Description = itemView.findViewById(R.id.Description);
         }
     }
 }

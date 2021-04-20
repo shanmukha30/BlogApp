@@ -50,8 +50,8 @@
 
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editText"
-                android:layout_width="320dp"
+                android:id="@+id/searchEditText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@null"
@@ -62,7 +62,7 @@
                 android:textSize="20sp" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/goButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -82,7 +82,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/NewsRecyclerView"
+        android:id="@+id/newsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="15dp"

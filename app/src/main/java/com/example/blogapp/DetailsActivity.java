@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-public class Detailed extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity {
     TextView NewsTitle,Source,Description;
     ImageView thumbnail_id;
     WebView webView;
@@ -23,11 +23,11 @@ public class Detailed extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed);
-        NewsTitle = findViewById(R.id.NewsTitle);
-        Source = findViewById(R.id.Source);
-        thumbnail_id = findViewById(R.id.thumbnail_id)
+        NewsTitle = findViewById(R.id.newsTitle);
+        Source = findViewById(R.id.newsSource);
+        thumbnail_id = findViewById(R.id.thumbnail_id);
 
-        Description = findViewById(R.id.Description);
+        Description = findViewById(R.id.newsDesc);
         webView = findViewById(R.id.webView);
         loader = findViewById(R.id.webViewLoader);
         loader.setVisibility(View.VISIBLE);
@@ -41,7 +41,7 @@ public class Detailed extends AppCompatActivity {
         Source.setText(source);
         Description.setText(description);
 
-        Picasso.with(Detailed.this).load(urlToImage).into(thumbnail_id);
+        Picasso.with(DetailsActivity.this).load(urlToImage).into(thumbnail_id);
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadsImagesAutomatically(true);
