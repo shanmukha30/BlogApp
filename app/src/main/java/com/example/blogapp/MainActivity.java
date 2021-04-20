@@ -1,8 +1,12 @@
 package com.example.blogapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends AppCompatActivity {
+    private WebView webView;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     ArrayList<Map<String, String>> searchList = new ArrayList<>();
@@ -34,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //web view
+        webView = (WebView) findViewById(R.id.webView);
+        webView.setWebViewClient(new WebViewClient());
+        webView.loadUrl("https://www.nytimes.com/");
+        WebSettings webSettings=webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
         ButterKnife.bind(this);
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -81,5 +92,25 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Error", t.getMessage());
             }
         });
+    }
+    public class webClient extends WebViewClient{
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon){
+            super.onPageStarted(view,url,favicon);
+        }
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view,String url){
+            view.loadUrl(url);
+            return true;
+        }
+    }
+    @Override
+    public void onBackPressed(){
+        if(webView.canGoBack()) {
+            webView.goBack();
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 }
