@@ -52,42 +52,41 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
-        }
-
-        favouritesList.clear();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(currentUser.toString()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                QuerySnapshot docs = task.getResult();
-                if (!docs.isEmpty()){
-                    for (QueryDocumentSnapshot titles : docs){
-                        Map<String, String> entry = new HashMap<>();
-                        entry.put("title", titles.getData().get("title").toString());
-                        entry.put("source", titles.getData().get("source").toString());
-                        entry.put("imgurl", titles.getData().get("imgurl").toString());
-                        entry.put("url", titles.getData().get("url").toString());
-                        favouritesList.add(entry);
+        } else {
+            favouritesList.clear();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection(currentUser.toString()).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    QuerySnapshot docs = task.getResult();
+                    if (!docs.isEmpty()) {
+                        for (QueryDocumentSnapshot titles : docs) {
+                            Map<String, String> entry = new HashMap<>();
+                            entry.put("title", titles.getData().get("title").toString());
+                            entry.put("source", titles.getData().get("source").toString());
+                            entry.put("imgurl", titles.getData().get("imgurl").toString());
+                            entry.put("url", titles.getData().get("url").toString());
+                            favouritesList.add(entry);
+                        }
                     }
                 }
-            }
-        }).addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Couldn't retrieve data", Toast.LENGTH_SHORT).show());
-        favouritesAdapter.notifyDataSetChanged();
+            }).addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Couldn't retrieve data", Toast.LENGTH_SHORT).show());
+            favouritesAdapter.notifyDataSetChanged();
 
-        setSupportActionBar(toolbar);
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.logoutButton){
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                finish();
-                return true;
-            }
-            else if(item.getItemId() == R.id.searchButton){
-                Intent intent = new Intent(this, NewsActivity.class);
-                startActivity(intent);
-                return true;
-            }
-            return false;
-        });
+            setSupportActionBar(toolbar);
+            toolbar.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.logoutButton) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                    return true;
+                } else if (item.getItemId() == R.id.searchButton) {
+                    Intent intent = new Intent(this, NewsActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            });
+        }
     }
 
     @Override

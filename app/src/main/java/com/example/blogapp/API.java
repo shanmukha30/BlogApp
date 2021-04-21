@@ -5,8 +5,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface API {
+    String BASE_URL = "https://newsapi.org/v2/";
 
-    String BASE_URL = "http://api.mediastack.com/v1/";
-    @GET("news?")
-    Call<JSONPlaceHolder> getResult(@Query("access_key") String key, @Query("sources") String source);
+    @GET("everything?")
+    Call<JSONPlaceHolder> getResult(@Query("q") String q, @Query("apiKey") String key);
 }
+
