@@ -7,4 +7,4 @@
 - Lottie Library
 - Firebase
 - Butterknife
-- Picasso(We Tried)
+- Picasso
