@@ -13,7 +13,7 @@ public class JSONPlaceHolder implements Serializable
     private String status;
     @SerializedName("totalResults")
     @Expose
-    private Integer totalResults;
+    private String totalResults;
     @SerializedName("articles")
     @Expose
     private ArrayList<Article> articles = new ArrayList<>();
@@ -24,10 +24,10 @@ public class JSONPlaceHolder implements Serializable
     public void setStatus(String status) {
         this.status = status;
     }
-    public Integer getTotalResults() {
+    public String getTotalResults() {
         return totalResults;
     }
-    public void setTotalResults(Integer totalResults) {
+    public void setTotalResults(String totalResults) {
         this.totalResults = totalResults;
     }
     public ArrayList<Article> getArticles() {

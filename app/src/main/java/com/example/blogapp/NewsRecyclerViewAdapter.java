@@ -51,7 +51,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.newsTitle.setText(arrayList.get(position).get("title"));
         holder.newsSource.setText(arrayList.get(position).get("name"));
         holder.newsDesc.setText(arrayList.get(position).get("description"));
-        //Picasso.with(mContext).load(arrayList.get(position).get("imgurl")).into(holder.thumbnail);
+        Picasso.with(mContext).load(arrayList.get(position).get("imgurl")).into(holder.thumbnail);
         holder.cardView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, DetailsActivity.class);
             intent.putExtra("url", arrayList.get(position).get("url"));
@@ -94,14 +94,19 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.newsTitle) TextView newsTitle;
-        @BindView(R.id.thumbnail_id) ImageView thumbnail;
-        @BindView(R.id.cardView) CardView cardView;
-        @BindView(R.id.newsSource) TextView newsSource;
-        @BindView(R.id.newsDesc) TextView newsDesc;
+        TextView newsTitle;
+        ImageView thumbnail;
+        CardView cardView;
+        TextView newsSource;
+        TextView newsDesc;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
+            newsTitle = itemView.findViewById(R.id.newsTitle);
+            thumbnail = itemView.findViewById(R.id.thumbnail_id);
+            cardView = itemView.findViewById(R.id.cardView);
+            newsSource = itemView.findViewById(R.id.newsSource);
+            newsDesc = itemView.findViewById(R.id.newsDesc);
         }
     }
 }

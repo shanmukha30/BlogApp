@@ -43,6 +43,15 @@ public class NewsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+
+        Map<String, String> entry = new HashMap<>();
+        entry.put("title", "X");
+        entry.put("description", "X");
+        entry.put("source", "X");
+        entry.put("imgurl", "X");
+        entry.put("url", "X");
+        searchList.add(entry);
+
         RecyclerView newsRecyclerView = findViewById(R.id.newsRecyclerView);
         NewsRecyclerViewAdapter newsAdapter = new NewsRecyclerViewAdapter(this, searchList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -68,19 +77,27 @@ public class NewsActivity extends AppCompatActivity {
                 call.enqueue(new Callback<JSONPlaceHolder>() {
                     @Override
                     public void onResponse(@NonNull Call<JSONPlaceHolder> call, @NonNull Response<JSONPlaceHolder> response) {
-                        if (response.body().getArticles() != null && response.body().getArticles().size() > 0){
+                        if (response.isSuccessful() && response.body().getArticles() != null){
                             ArrayList<Article> searchResults = response.body().getArticles();
-                            for (int i = 0; i < searchResults.size(); i++) {
+                            int n;
+                            if (searchResults.size() > 10){
+                                n = 10;
+                            }else{
+                                n = searchResults.size();
+                            }
+                            for (int i = 0; i < n; i++) {
                                 Map<String, String> entry = new HashMap<>();
                                 entry.put("title", searchResults.get(i).getTitle());
                                 entry.put("source", searchResults.get(i).getSource().getName());
+                                entry.put("description", searchResults.get(i).getDescription());
                                 entry.put("imgurl", searchResults.get(i).getUrlToImage());
                                 entry.put("url", searchResults.get(i).getUrl());
                                 searchList.add(entry);
                             }
+                            Log.i("infoxxx", searchList.toString());
                             newsAdapter.notifyDataSetChanged();
                         }else{
-                            Toast.makeText(NewsActivity.this, "No results", Toast.LENGTH_SHORT).show();
+                            Log.i("infoxx", "No results" + response.errorBody().toString());
                         }
                     }
                     @Override
