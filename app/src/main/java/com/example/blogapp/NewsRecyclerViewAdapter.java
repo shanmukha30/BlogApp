@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.MyHolder>{
     private Context mContext;
@@ -57,33 +58,23 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             intent.putExtra("url", arrayList.get(position).get("url"));
             mContext.startActivity(intent);
         });
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Map<String, String> entry = new HashMap<>();
-                entry.put("title", arrayList.get(position).get("title"));
-                entry.put("name", arrayList.get(position).get("name"));
-                entry.put("description", arrayList.get(position).get("description"));
-                entry.put("imgurl", "x");
-                entry.put("url", arrayList.get(position).get("url"));
-                MainActivity.favouritesList.add(entry);
-                MainActivity.favouritesAdapter.notifyDataSetChanged();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection(FirebaseAuth.getInstance().getCurrentUser().toString()).document("x").set(entry).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(mContext, "Could save", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                return true;
-            }
+        holder.cardView.setOnLongClickListener(v -> {
+            Map<String, String> entry = new HashMap<>();
+            entry.put("title", arrayList.get(position).get("title"));
+            entry.put("name", arrayList.get(position).get("name"));
+            entry.put("description", arrayList.get(position).get("description"));
+            entry.put("imgurl", arrayList.get(position).get("imgurl"));
+            entry.put("url", arrayList.get(position).get("url"));
+            MainActivity.favouritesList.add(entry);
+            MainActivity.favouritesAdapter.notifyDataSetChanged();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection(FirebaseAuth.getInstance().getCurrentUser().toString()).document(arrayList.get(position).get("title")).set(entry).addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
+                    MainActivity.favouritesAdapter.notifyDataSetChanged();
+                }
+            }).addOnFailureListener(e -> Toast.makeText(mContext, "Couldn't save", Toast.LENGTH_SHORT).show());
+            return true;
         });
     }
 
@@ -94,19 +85,15 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        TextView newsTitle;
-        ImageView thumbnail;
-        CardView cardView;
-        TextView newsSource;
-        TextView newsDesc;
+        @BindView(R.id.newsTitle) TextView newsTitle;
+        @BindView(R.id.thumbnail_id)ImageView thumbnail;
+        @BindView(R.id.cardView)CardView cardView;
+        @BindView(R.id.newsSource)TextView newsSource;
+        @BindView(R.id.newsDesc)TextView newsDesc;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            newsTitle = itemView.findViewById(R.id.newsTitle);
-            thumbnail = itemView.findViewById(R.id.thumbnail_id);
-            cardView = itemView.findViewById(R.id.cardView);
-            newsSource = itemView.findViewById(R.id.newsSource);
-            newsDesc = itemView.findViewById(R.id.newsDesc);
+            ButterKnife.bind(mContext, itemView);
         }
     }
 }

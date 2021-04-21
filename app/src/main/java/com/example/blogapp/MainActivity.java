@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.favouritesRecyclerView) RecyclerView favouritesRecyclerView;
     static ArrayList<Map<String, String>> favouritesList = new ArrayList<>();
     static FavouritesRecyclerViewAdapter favouritesAdapter;
 
@@ -38,14 +39,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView favouritesRecyclerView = findViewById(R.id.favouritesRecyclerView);
+        ButterKnife.bind(this);
 
         favouritesAdapter = new FavouritesRecyclerViewAdapter(this, favouritesList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         favouritesRecyclerView.setLayoutManager(layoutManager);
         favouritesRecyclerView.setAdapter(favouritesAdapter);
-
-        ButterKnife.bind(this);
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
@@ -63,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                             Map<String, String> entry = new HashMap<>();
                             entry.put("title", titles.getData().get("title").toString());
                             entry.put("source", titles.getData().get("source").toString());
+                            entry.put("description", titles.getData().get("description").toString());
                             entry.put("imgurl", titles.getData().get("imgurl").toString());
                             entry.put("url", titles.getData().get("url").toString());
                             favouritesList.add(entry);

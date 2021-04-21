@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<FavouritesRecyclerViewAdapter.MyHolder>{
     private Context mContext;
@@ -67,6 +68,7 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
+            ButterKnife.bind(mContext, itemView);
         }
     }
 }

@@ -38,26 +38,18 @@ public class NewsActivity extends AppCompatActivity {
     static ArrayList<Map<String, String>> searchList = new ArrayList<>();
     @BindView(R.id.goButton) Button goButton;
     @BindView(R.id.searchEditText) EditText searchEditText;
+    @BindView(R.id.newsRecyclerView) RecyclerView newsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+        ButterKnife.bind(this);
 
-        Map<String, String> entry = new HashMap<>();
-        entry.put("title", "X");
-        entry.put("description", "X");
-        entry.put("source", "X");
-        entry.put("imgurl", "X");
-        entry.put("url", "X");
-        searchList.add(entry);
-
-        RecyclerView newsRecyclerView = findViewById(R.id.newsRecyclerView);
         NewsRecyclerViewAdapter newsAdapter = new NewsRecyclerViewAdapter(this, searchList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         newsRecyclerView.setLayoutManager(layoutManager);
         newsRecyclerView.setAdapter(newsAdapter);
-        ButterKnife.bind(this);
 
         goButton.setOnClickListener(v -> {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
