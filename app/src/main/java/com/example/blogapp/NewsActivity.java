@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,51 +58,74 @@ public class NewsActivity extends AppCompatActivity {
             if (NewsActivity.this.getCurrentFocus() != null){
                 inputMethodManager.hideSoftInputFromWindow(NewsActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(API.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+            if (!searchEditText.getText().toString().isEmpty()) {
+                ProgressDialog progress = new ProgressDialog(NewsActivity.this);
+                progress.setMessage("Searching...");
+                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progress.setIndeterminate(true);
+                progress.setCancelable(false);
+                progress.show();
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(API.BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
-            searchList.clear();
-            API myApi = retrofit.create(API.class);
-            try {
-                String urlEncoder = URLEncoder.encode(searchEditText.getText().toString(), "UTF-8");
-                Call<JSONPlaceHolder> call = myApi.getResult(urlEncoder, "b09bf3b0daaa4ea88fa79218bff2c973");
-                call.enqueue(new Callback<JSONPlaceHolder>() {
-                    @Override
-                    public void onResponse(@NonNull Call<JSONPlaceHolder> call, @NonNull Response<JSONPlaceHolder> response) {
-                        if (response.isSuccessful() && response.body().getArticles() != null){
-                            ArrayList<Article> searchResults = response.body().getArticles();
-                            int n;
-                            if (searchResults.size() > 10){
-                                n = 10;
-                            }else{
-                                n = searchResults.size();
+                searchList.clear();
+                API myApi = retrofit.create(API.class);
+                try {
+                    String urlEncoder = URLEncoder.encode(searchEditText.getText().toString(), "UTF-8");
+                    Call<JSONPlaceHolder> call = myApi.getResult(urlEncoder, "b09bf3b0daaa4ea88fa79218bff2c973");
+                    call.enqueue(new Callback<JSONPlaceHolder>() {
+                        @Override
+                        public void onResponse(@NonNull Call<JSONPlaceHolder> call, @NonNull Response<JSONPlaceHolder> response) {
+                            if (response.isSuccessful() && response.body().getArticles() != null) {
+                                ArrayList<Article> searchResults = response.body().getArticles();
+                                int n;
+                                if (searchResults.size() > 10) {
+                                    n = 10;
+                                } else {
+                                    n = searchResults.size();
+                                }
+                                for (int i = 0; i < n; i++) {
+                                    Map<String, String> entry = new HashMap<>();
+                                    entry.put("title", searchResults.get(i).getTitle());
+                                    entry.put("source", searchResults.get(i).getSource().getName());
+                                    entry.put("description", searchResults.get(i).getDescription());
+                                    entry.put("imgurl", searchResults.get(i).getUrlToImage());
+                                    entry.put("url", searchResults.get(i).getUrl());
+                                    searchList.add(entry);
+                                }
+                                Log.i("infoxxx", searchList.toString());
+                                newsAdapter.notifyDataSetChanged();
+                                progress.dismiss();
+                            } else {
+                                Toast.makeText(NewsActivity.this, "No results", Toast.LENGTH_LONG).show();
+                                progress.dismiss();
                             }
-                            for (int i = 0; i < n; i++) {
-                                Map<String, String> entry = new HashMap<>();
-                                entry.put("title", searchResults.get(i).getTitle());
-                                entry.put("source", searchResults.get(i).getSource().getName());
-                                entry.put("description", searchResults.get(i).getDescription());
-                                entry.put("imgurl", searchResults.get(i).getUrlToImage());
-                                entry.put("url", searchResults.get(i).getUrl());
-                                searchList.add(entry);
-                            }
-                            Log.i("infoxxx", searchList.toString());
-                            newsAdapter.notifyDataSetChanged();
-                        }else{
-                            Log.i("infoxx", "No results" + response.errorBody().toString());
                         }
-                    }
-                    @Override
-                    public void onFailure(@NonNull Call<JSONPlaceHolder> call, @NonNull Throwable t) {
-                        Toast.makeText(NewsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("Error", t.getMessage());
-                    }
-                });
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+
+                        @Override
+                        public void onFailure(@NonNull Call<JSONPlaceHolder> call, @NonNull Throwable t) {
+                            Toast.makeText(NewsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e("Error", t.getMessage());
+                            progress.dismiss();
+                        }
+                    });
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    Toast.makeText(NewsActivity.this, "Unknown error occured", Toast.LENGTH_LONG).show();
+                    progress.dismiss();
+                }
+            }else{
+                Toast.makeText(this, "Field cannot be empty", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(NewsActivity.this, MainActivity.class));
+        finish();
     }
 }

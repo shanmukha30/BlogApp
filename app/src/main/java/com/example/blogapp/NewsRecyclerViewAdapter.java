@@ -52,7 +52,12 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.newsTitle.setText(arrayList.get(position).get("title"));
         holder.newsSource.setText(arrayList.get(position).get("name"));
         holder.newsDesc.setText(arrayList.get(position).get("description"));
-        Picasso.with(mContext).load(arrayList.get(position).get("imgurl")).into(holder.thumbnail);
+        Picasso.with(mContext).load(arrayList.get(position).get("imgurl"))
+                .resize(2048, 1600)
+                .onlyScaleDown()
+                .placeholder(R.drawable.errorplaceholder)
+                .error(R.drawable.errorplaceholder)
+                .into(holder.thumbnail);
         holder.cardView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, DetailsActivity.class);
             intent.putExtra("url", arrayList.get(position).get("url"));
@@ -65,13 +70,15 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             entry.put("description", arrayList.get(position).get("description"));
             entry.put("imgurl", arrayList.get(position).get("imgurl"));
             entry.put("url", arrayList.get(position).get("url"));
-            MainActivity.favArticles.add(entry);
+            MainActivity.favouritesList.add(entry);
             MainActivity.favouritesAdapter.notifyDataSetChanged();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(FirebaseAuth.getInstance().getCurrentUser().toString()).document(arrayList.get(position).get("title")).set(entry).addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
                     MainActivity.favouritesAdapter.notifyDataSetChanged();
+                }else{
+                    Toast.makeText(mContext, "Couldn't save", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(e -> Toast.makeText(mContext, "Couldn't save", Toast.LENGTH_SHORT).show());
             return true;
@@ -80,20 +87,32 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     @Override
     public int getItemCount() {
-        return 0;
+        return arrayList.size();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.newsTitle) TextView newsTitle;
+        /*@BindView(R.id.newsTitle) TextView newsTitle;
         @BindView(R.id.thumbnail_id)ImageView thumbnail;
         @BindView(R.id.cardView)CardView cardView;
         @BindView(R.id.newsSource)TextView newsSource;
-        @BindView(R.id.newsDesc)TextView newsDesc;
+        @BindView(R.id.newsDesc)TextView newsDesc;*/
+
+        TextView newsTitle;
+        ImageView thumbnail;
+        CardView cardView;
+        TextView newsSource;
+        TextView newsDesc;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(mContext, itemView);
+            //ButterKnife.bind(mContext, itemView);
+            newsTitle = itemView.findViewById(R.id.newsTitle);
+            thumbnail = itemView.findViewById(R.id.thumbnail_id);
+            cardView = itemView.findViewById(R.id.cardView);
+            newsSource = itemView.findViewById(R.id.newsSource);
+            newsDesc = itemView.findViewById(R.id.newsDesc);
+
         }
     }
 }

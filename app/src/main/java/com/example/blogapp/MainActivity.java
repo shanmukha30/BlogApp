@@ -1,5 +1,6 @@
 package com.example.blogapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -38,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.favouritesRecyclerView) RecyclerView favouritesRecyclerView;
-    //static ArrayList<Map<String, String>> favouritesList = new ArrayList<>();
-    static ArrayList<Map<String, String>> favArticles = new ArrayList<>();
+    static ArrayList<Map<String, String>> favouritesList = new ArrayList<>();
+    //static ArrayList<Map<String, String>> favArticles = new ArrayList<>();
     static FavouritesRecyclerViewAdapter favouritesAdapter;
 
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        favouritesAdapter = new FavouritesRecyclerViewAdapter(this, favArticles);
+        favouritesAdapter = new FavouritesRecyclerViewAdapter(this, favouritesList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         favouritesRecyclerView.setLayoutManager(layoutManager);
         favouritesRecyclerView.setAdapter(favouritesAdapter);
@@ -60,47 +61,65 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         } else {
-            favArticles.clear();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection(currentUser.toString()).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    QuerySnapshot docs = task.getResult();
-                    if (!docs.isEmpty()) {
-                        for (QueryDocumentSnapshot titles : docs) {
-                            Map<String, String> entry = new HashMap<>();
-                            entry.put("title", titles.getData().get("title").toString());
-                            entry.put("source", titles.getData().get("source").toString());
-                            entry.put("description", titles.getData().get("description").toString());
-                            entry.put("imgurl", titles.getData().get("imgurl").toString());
-                            entry.put("url", titles.getData().get("url").toString());
-                            favArticles.add(entry);
-                        }
-                    }
-                }
-            }).addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Couldn't retrieve data", Toast.LENGTH_SHORT).show());
-            favouritesAdapter.notifyDataSetChanged();
-
-            setSupportActionBar(toolbar);
-            toolbar.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.logoutButton) {
-                    FirebaseAuth.getInstance().signOut();
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    finish();
-                    return true;
-                } else if (item.getItemId() == R.id.searchButton) {
-                    Intent intent = new Intent(this, NewsActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-                return false;
-            });
+            syncFirebaseData();
         }
-    }
 
+        setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.logoutButton) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+                return true;
+            } else if (item.getItemId() == R.id.searchButton) {
+                Intent intent = new Intent(this, NewsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void syncFirebaseData(){
+        favouritesList.clear();
+        ProgressDialog progress = new ProgressDialog(MainActivity.this);
+        progress.setMessage("Retrieving saved data");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.setCancelable(false);
+        progress.show();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(FirebaseAuth.getInstance().getCurrentUser().toString()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot docs = task.getResult();
+                if (!docs.isEmpty()) {
+                    for (QueryDocumentSnapshot titles : docs) {
+                        Map<String, String> entry = new HashMap<>();
+                        entry.put("title", titles.getData().get("title").toString());
+                        //entry.put("source", titles.getData().get("source").toString());
+                        entry.put("description", titles.getData().get("description").toString());
+                        entry.put("imgurl", titles.getData().get("imgurl").toString());
+                        entry.put("url", titles.getData().get("url").toString());
+                        favouritesList.add(entry);
+                        progress.dismiss();
+                    }
+                } else {
+                    progress.dismiss();
+                    Toast.makeText(this, "No saved items", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                progress.dismiss();
+            }
+        }).addOnFailureListener(e -> {
+            progress.dismiss();
+            Toast.makeText(MainActivity.this, "Couldn't retrieve data", Toast.LENGTH_SHORT).show();
+        });
+        favouritesAdapter.notifyDataSetChanged();
     }
 }

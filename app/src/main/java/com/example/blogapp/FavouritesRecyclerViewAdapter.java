@@ -24,12 +24,12 @@ import butterknife.ButterKnife;
 public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<FavouritesRecyclerViewAdapter.MyHolder>{
      private Context mContext;
     //private ArrayList<Map<String, String>> arrayList;
-    private ArrayList<Map<String, String>> favArticles;
+    private ArrayList<Map<String, String>> arrayList;
 
 
     public FavouritesRecyclerViewAdapter(Context mContext, ArrayList<Map<String, String>> arrayList){
         this.mContext = mContext;
-        this.favArticles = arrayList;
+        this.arrayList = arrayList;
     }
 
     @NonNull
@@ -45,42 +45,55 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
 
-        holder.newsTitle.setText(favArticles.get(position).get("title"));
-        holder.newsSource.setText(favArticles.get(position).get("name"));
-        holder.newsDesc.setText(favArticles.get(position).get("description"));
-        Picasso.with(mContext).load(favArticles.get(position).get("imageUrl")).into(holder.thumbnail);
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext,DetailsActivity.class);
-                intent.putExtra("title",favArticles.get(position).get("title"));
-                intent.putExtra("source",favArticles.get(position).get("name"));
-                intent.putExtra("imageUrl",favArticles.get(position).get("imageUrl"));
-                intent.putExtra("url",favArticles.get(position).get("url"));
-                intent.putExtra("description",favArticles.get(position).get("description"));
-                mContext.startActivity(intent);
+        holder.newsTitle.setText(arrayList.get(position).get("title"));
+        holder.newsSource.setText(arrayList.get(position).get("name"));
+        holder.newsDesc.setText(arrayList.get(position).get("description"));
+        Picasso.with(mContext).load(arrayList.get(position).get("imgurl"))
+                .resize(2048, 1600)
+                .onlyScaleDown()
+                .placeholder(R.drawable.errorplaceholder)
+                .error(R.drawable.errorplaceholder)
+                .into(holder.thumbnail);
+        holder.cardView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext,DetailsActivity.class);
+            //intent.putExtra("title",arrayList.get(position).get("title"));
+            //intent.putExtra("source",arrayList.get(position).get("name"));
+            //intent.putExtra("imageUrl",arrayList.get(position).get("imageUrl"));
+            intent.putExtra("url",arrayList.get(position).get("url"));
+            //intent.putExtra("description",arrayList.get(position).get("description"));
+            mContext.startActivity(intent);
 
-            }
         });
     }
 
     @Override
     public int getItemCount() {
         //return favArticles.size();
-        return 0;
+        return arrayList.size();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.newsTitle) TextView newsTitle;
-        @BindView(R.id.thumbnail_id) ImageView thumbnail;
-        @BindView(R.id.cardView) CardView cardView;
-        @BindView(R.id.newsSource) TextView newsSource;
-        @BindView(R.id.newsDesc) TextView newsDesc;
+       /*@BindView(R.id.newsTitle) TextView newsTitle;
+        @BindView(R.id.thumbnail_id)ImageView thumbnail;
+        @BindView(R.id.cardView)CardView cardView;
+        @BindView(R.id.newsSource)TextView newsSource;
+        @BindView(R.id.newsDesc)TextView newsDesc;*/
+
+        TextView newsTitle;
+        ImageView thumbnail;
+        CardView cardView;
+        TextView newsSource;
+        TextView newsDesc;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(mContext, itemView);
+            //ButterKnife.bind(mContext, itemView);
+            newsTitle = itemView.findViewById(R.id.newsTitle);
+            thumbnail = itemView.findViewById(R.id.thumbnail_id);
+            cardView = itemView.findViewById(R.id.cardView);
+            newsSource = itemView.findViewById(R.id.newsSource);
+            newsDesc = itemView.findViewById(R.id.newsDesc);
         }
     }
 }
