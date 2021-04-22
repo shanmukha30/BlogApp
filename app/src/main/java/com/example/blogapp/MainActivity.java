@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
-        } else {
+        }else {
             syncFirebaseData();
         }
 
@@ -88,9 +88,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FirebaseAuth.getInstance().getCurrentUser().getEmail()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                QuerySnapshot docs = task.getResult();
-                if (!docs.isEmpty()) {
-                    for (QueryDocumentSnapshot titles : docs) {
+                if (!task.getResult().isEmpty()) {
+                    for (QueryDocumentSnapshot titles : task.getResult()) {
                         Map<String, String> entry = new HashMap<>();
                         entry.put("title", titles.getData().get("title").toString());
                         entry.put("name", titles.getData().get("name").toString());

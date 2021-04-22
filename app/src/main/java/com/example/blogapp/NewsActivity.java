@@ -81,7 +81,7 @@ public class NewsActivity extends AppCompatActivity {
                                 }
                                 for (int i = 0; i < n; i++) {
                                     Map<String, String> entry = new HashMap<>();
-                                    if (searchResults.get(i).getTitle() != null && entry.put("url", searchResults.get(i).getUrl()) != null) {
+                                    if (searchResults.get(i).getTitle() != null && searchResults.get(i).getUrl() != null) {
                                         entry.put("title", searchResults.get(i).getTitle());
                                         if (searchResults.get(i).getSource().getName() != null) {
                                             entry.put("name", searchResults.get(i).getSource().getName());

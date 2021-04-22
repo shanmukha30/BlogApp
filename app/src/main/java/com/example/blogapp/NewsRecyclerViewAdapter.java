@@ -72,7 +72,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(FirebaseAuth.getInstance().getCurrentUser().getEmail()).document(arrayList.get(position).get("title")).set(entry).addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
-                    Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Saved to favourites", Toast.LENGTH_SHORT).show();
                     MainActivity.favouritesAdapter.notifyDataSetChanged();
                 }else{
                     Toast.makeText(mContext, "Couldn't save", Toast.LENGTH_SHORT).show();
