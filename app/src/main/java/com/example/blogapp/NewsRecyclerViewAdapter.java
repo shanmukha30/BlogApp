@@ -13,9 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
@@ -73,7 +70,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             MainActivity.favouritesList.add(entry);
             MainActivity.favouritesAdapter.notifyDataSetChanged();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection(FirebaseAuth.getInstance().getCurrentUser().toString()).document(arrayList.get(position).get("title")).set(entry).addOnCompleteListener(task -> {
+            db.collection(FirebaseAuth.getInstance().getCurrentUser().getEmail()).document(arrayList.get(position).get("title")).set(entry).addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
                     MainActivity.favouritesAdapter.notifyDataSetChanged();

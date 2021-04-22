@@ -25,6 +25,7 @@
             android:id="@+id/thumbnail_id"
             android:layout_width="match_parent"
             android:layout_height="120dp"
+            android:layout_margin="4dp"
             android:layout_marginTop="10dp"
             android:scaleType="centerCrop" />
 
@@ -32,29 +33,30 @@
             android:id="@+id/newsTitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="4dp"
             android:fontFamily="@font/fauna_one"
             android:text="NewsName"
-            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/newsSource"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/fauna_one"
-            android:text="Source"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/newsDesc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="4dp"
             android:fontFamily="@font/fauna_one"
+            android:maxLines="2"
             android:text="Description"
-            android:textColor="@color/black"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/newsSource"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/fauna_one"
+            android:text="Source"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

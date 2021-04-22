@@ -1,13 +1,7 @@
 package com.example.blogapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -15,13 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,27 +74,36 @@ public class NewsActivity extends AppCompatActivity {
                             if (response.isSuccessful() && response.body().getArticles() != null) {
                                 ArrayList<Article> searchResults = response.body().getArticles();
                                 int n;
-                                if (searchResults.size() > 10) {
-                                    n = 10;
+                                if (searchResults.size() > 15) {
+                                    n = 15;
                                 } else {
                                     n = searchResults.size();
                                 }
                                 for (int i = 0; i < n; i++) {
                                     Map<String, String> entry = new HashMap<>();
-                                    entry.put("title", searchResults.get(i).getTitle());
-                                    entry.put("source", searchResults.get(i).getSource().getName());
-                                    entry.put("description", searchResults.get(i).getDescription());
-                                    entry.put("imgurl", searchResults.get(i).getUrlToImage());
-                                    entry.put("url", searchResults.get(i).getUrl());
-                                    searchList.add(entry);
+                                    if (searchResults.get(i).getTitle() != null && entry.put("url", searchResults.get(i).getUrl()) != null) {
+                                        entry.put("title", searchResults.get(i).getTitle());
+                                        if (searchResults.get(i).getSource().getName() != null) {
+                                            entry.put("name", searchResults.get(i).getSource().getName());
+                                        }else{
+                                            entry.put("name", "Source not available");
+                                        }
+                                        if (searchResults.get(i).getDescription() != null) {
+                                            entry.put("description", searchResults.get(i).getDescription());
+                                        }else{
+                                            entry.put("description", "No content description");
+                                        }
+                                        entry.put("imgurl", searchResults.get(i).getUrlToImage());
+                                        entry.put("url", searchResults.get(i).getUrl());
+                                        searchList.add(entry);
+                                    }
                                 }
-                                Log.i("infoxxx", searchList.toString());
+                                Log.i("info", searchList.toString());
                                 newsAdapter.notifyDataSetChanged();
-                                progress.dismiss();
                             } else {
                                 Toast.makeText(NewsActivity.this, "No results", Toast.LENGTH_LONG).show();
-                                progress.dismiss();
                             }
+                            progress.dismiss();
                         }
 
                         @Override
@@ -113,7 +115,7 @@ public class NewsActivity extends AppCompatActivity {
                     });
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                    Toast.makeText(NewsActivity.this, "Unknown error occured", Toast.LENGTH_LONG).show();
+                    Toast.makeText(NewsActivity.this, "Unknown error occurred", Toast.LENGTH_LONG).show();
                     progress.dismiss();
                 }
             }else{

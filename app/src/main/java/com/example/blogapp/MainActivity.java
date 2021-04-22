@@ -6,32 +6,23 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.protobuf.Api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -95,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
         progress.setCancelable(false);
         progress.show();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(FirebaseAuth.getInstance().getCurrentUser().toString()).get().addOnCompleteListener(task -> {
+        db.collection(FirebaseAuth.getInstance().getCurrentUser().getEmail()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 QuerySnapshot docs = task.getResult();
                 if (!docs.isEmpty()) {
                     for (QueryDocumentSnapshot titles : docs) {
                         Map<String, String> entry = new HashMap<>();
                         entry.put("title", titles.getData().get("title").toString());
-                        //entry.put("source", titles.getData().get("source").toString());
+                        entry.put("name", titles.getData().get("name").toString());
                         entry.put("description", titles.getData().get("description").toString());
                         entry.put("imgurl", titles.getData().get("imgurl").toString());
                         entry.put("url", titles.getData().get("url").toString());

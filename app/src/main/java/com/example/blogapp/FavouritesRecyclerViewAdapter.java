@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList;;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -23,7 +22,6 @@ import butterknife.ButterKnife;
 
 public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<FavouritesRecyclerViewAdapter.MyHolder>{
      private Context mContext;
-    //private ArrayList<Map<String, String>> arrayList;
     private ArrayList<Map<String, String>> arrayList;
 
 
@@ -56,11 +54,7 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
                 .into(holder.thumbnail);
         holder.cardView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext,DetailsActivity.class);
-            //intent.putExtra("title",arrayList.get(position).get("title"));
-            //intent.putExtra("source",arrayList.get(position).get("name"));
-            //intent.putExtra("imageUrl",arrayList.get(position).get("imageUrl"));
             intent.putExtra("url",arrayList.get(position).get("url"));
-            //intent.putExtra("description",arrayList.get(position).get("description"));
             mContext.startActivity(intent);
 
         });
