@@ -65,7 +65,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             entry.put("description", arrayList.get(position).get("description"));
             entry.put("imgurl", arrayList.get(position).get("imgurl"));
             entry.put("url", arrayList.get(position).get("url"));
-            MainActivity.favouritesList.add(entry);
+            MainActivity.favArticles.add(entry);
             MainActivity.favouritesAdapter.notifyDataSetChanged();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(FirebaseAuth.getInstance().getCurrentUser().toString()).document(arrayList.get(position).get("title")).set(entry).addOnCompleteListener(task -> {

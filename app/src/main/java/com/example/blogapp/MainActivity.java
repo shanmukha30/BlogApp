@@ -19,21 +19,29 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.protobuf.Api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity {
 
+
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.favouritesRecyclerView) RecyclerView favouritesRecyclerView;
-    static ArrayList<Map<String, String>> favouritesList = new ArrayList<>();
+    //static ArrayList<Map<String, String>> favouritesList = new ArrayList<>();
+    static ArrayList<Map<String, String>> favArticles = new ArrayList<>();
     static FavouritesRecyclerViewAdapter favouritesAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        favouritesAdapter = new FavouritesRecyclerViewAdapter(this, favouritesList);
+        favouritesAdapter = new FavouritesRecyclerViewAdapter(this, favArticles);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         favouritesRecyclerView.setLayoutManager(layoutManager);
         favouritesRecyclerView.setAdapter(favouritesAdapter);
@@ -52,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         } else {
-            favouritesList.clear();
+            favArticles.clear();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(currentUser.toString()).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                             entry.put("description", titles.getData().get("description").toString());
                             entry.put("imgurl", titles.getData().get("imgurl").toString());
                             entry.put("url", titles.getData().get("url").toString());
-                            favouritesList.add(entry);
+                            favArticles.add(entry);
                         }
                     }
                 }
@@ -88,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

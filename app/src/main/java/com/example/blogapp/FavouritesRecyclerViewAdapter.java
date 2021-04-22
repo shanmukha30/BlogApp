@@ -15,18 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<FavouritesRecyclerViewAdapter.MyHolder>{
-    private Context mContext;
-    private ArrayList<Map<String, String>> arrayList;
+     private Context mContext;
+    //private ArrayList<Map<String, String>> arrayList;
+    private ArrayList<Map<String, String>> favArticles;
+
 
     public FavouritesRecyclerViewAdapter(Context mContext, ArrayList<Map<String, String>> arrayList){
         this.mContext = mContext;
-        this.arrayList = arrayList;
+        this.favArticles = arrayList;
     }
 
     @NonNull
@@ -42,19 +45,28 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
 
-        holder.newsTitle.setText(arrayList.get(position).get("title"));
-        holder.newsSource.setText(arrayList.get(position).get("name"));
-        holder.newsDesc.setText(arrayList.get(position).get("description"));
-        Picasso.with(mContext).load(arrayList.get(position).get("imgurl")).into(holder.thumbnail);
-        holder.cardView.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, DetailsActivity.class);
-            intent.putExtra("url", arrayList.get(position).get("url"));
-            mContext.startActivity(intent);
+        holder.newsTitle.setText(favArticles.get(position).get("title"));
+        holder.newsSource.setText(favArticles.get(position).get("name"));
+        holder.newsDesc.setText(favArticles.get(position).get("description"));
+        Picasso.with(mContext).load(favArticles.get(position).get("imageUrl")).into(holder.thumbnail);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,DetailsActivity.class);
+                intent.putExtra("title",favArticles.get(position).get("title"));
+                intent.putExtra("source",favArticles.get(position).get("name"));
+                intent.putExtra("imageUrl",favArticles.get(position).get("imageUrl"));
+                intent.putExtra("url",favArticles.get(position).get("url"));
+                intent.putExtra("description",favArticles.get(position).get("description"));
+                mContext.startActivity(intent);
+
+            }
         });
     }
 
     @Override
     public int getItemCount() {
+        //return favArticles.size();
         return 0;
     }
 

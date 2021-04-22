@@ -31,23 +31,27 @@ public class DetailsActivity extends AppCompatActivity {
         webView = findViewById(R.id.webView);
         loader = findViewById(R.id.webViewLoader);
         loader.setVisibility(View.VISIBLE);
+
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String source = intent.getStringExtra("source");
         String description = intent.getStringExtra("description");
-        String urlToImage = intent.getStringExtra("urlToImage");
+        String imageUrl = intent.getStringExtra("imageUrl");
         String url = intent.getStringExtra("url");
+
         NewsTitle.setText(title);
         Source.setText(source);
         Description.setText(description);
 
-        Picasso.with(DetailsActivity.this).load(urlToImage).into(thumbnail_id);
+        Picasso.with(DetailsActivity.this).load(imageUrl).into(thumbnail_id);
+
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(url);
+
         if(webView.isShown()){
             loader.setVisibility(View.INVISIBLE);
         }
